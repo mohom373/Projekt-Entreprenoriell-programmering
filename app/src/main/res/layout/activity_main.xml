@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="160dp"
-        android:layout_marginRight="160dp"
-        android:text="@string/button_send"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/activity_1_textView"
+        android:id="@+id/textViewCountdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/activity_1_text_view"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="60sp"
+        android:textColor="@android:color/black"
+        android:text="00:00" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/buttonStartPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCountdown"
+        android:layout_centerHorizontal="true"
+        android:text="Start" />
+    <Button
+        android:id="@+id/buttonRest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCountdown"
+        android:layout_marginStart="11dp"
+        android:layout_toEndOf="@id/buttonStartPause"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:text="Reset"/>
+
+
+</RelativeLayout>
