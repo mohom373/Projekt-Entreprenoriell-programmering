@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:textSize="60sp"
         android:textColor="@android:color/black"
-        android:text="00:00" />
+        android:text="@string/default_timer" />
 
     <Button
         android:id="@+id/buttonStartPause"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewCountdown"
         android:layout_centerHorizontal="true"
-        android:text="Start" />
+        android:text="@string/start" />
     <Button
         android:id="@+id/buttonRest"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_toEndOf="@id/buttonStartPause"
         android:visibility="invisible"
         tools:visibility="visible"
-        android:text="Reset"/>
+        android:text="@string/reset"/>
 
 
 </RelativeLayout>

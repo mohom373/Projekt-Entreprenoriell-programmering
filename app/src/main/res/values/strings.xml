@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Studify</string>
     <string name="button_send">Click Here</string>
+
+
     <string name="new_page_activity">You just clicked on my button and are now in Activity 2</string>
     <string name="activity_1_text_view">Activity 1</string>
+
+    <string name="start" >Start</string>
+    <string name="default_timer" >00:00</string>
+    <string name="reset" >Reset</string>
+
+
 </resources>

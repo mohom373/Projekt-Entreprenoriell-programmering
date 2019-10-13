@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mTimerRunning;
 
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(savedInstanceState !=null){
+            //savedInstanceState.get("count_down");
+            Long savedOnRotation = savedInstanceState.getLong("count_down");
+            mTimeLeftInMillis = savedOnRotation;
+            startTimer();
+        }
         updateCountDownText();
     }
     private void startTimer() {
@@ -98,5 +106,12 @@ public class MainActivity extends AppCompatActivity {
 
         mTextViewCountDown.setText(timeLeftFormatted);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("count_down", mTimeLeftInMillis);
+    }
+
 }
 
