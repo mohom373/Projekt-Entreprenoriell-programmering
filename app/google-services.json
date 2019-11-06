@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "25540458205",
+    "firebase_url": "https://studify-bc35b.firebaseio.com",
+    "project_id": "studify-bc35b",
+    "storage_bucket": "studify-bc35b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25540458205:android:1365fd3894e005dd820d34",
+        "android_client_info": {
+          "package_name": "com.example.myfirstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "25540458205-igm0mds5o3qoq85qtl3tg81lsa2rrerg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myfirstapp",
+            "certificate_hash": "50ed4b12831bd75ffe1ab1dbe3872beec91b8cca"
+          }
+        },
+        {
+          "client_id": "25540458205-vrb9jnii80basdvpjb5bgqfi6k154ne4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU2A7IjfNpnGWloZrdVB12EeRMLYPS5CU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "25540458205-vrb9jnii80basdvpjb5bgqfi6k154ne4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

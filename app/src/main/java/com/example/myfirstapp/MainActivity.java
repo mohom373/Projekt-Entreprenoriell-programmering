@@ -60,7 +60,18 @@ public class MainActivity extends AppCompatActivity {
             //savedInstanceState.get("count_down");
             Long savedOnRotation = savedInstanceState.getLong("count_down");
             mTimeLeftInMillis = savedOnRotation;
+
+            Log.d("Is timer running?", "" + mTimerRunning);
+
             startTimer();
+            /*
+            if (!mTimerRunning) {
+                updateCountDownText();
+            } else{
+                startTimer();
+            }
+
+             */
         }
         updateCountDownText();
     }
