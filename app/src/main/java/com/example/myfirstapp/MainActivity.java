@@ -1,6 +1,10 @@
 package com.example.myfirstapp;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +19,9 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private DrawerLayout drawer;
+
+
     private static final long START_TIME_IN_MILLIS = 600000;
 
     private TextView mTextViewCountDown;
@@ -33,6 +40,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Creation of navigation Drawer
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Creation of Timer views
         mTextViewCountDown = findViewById(R.id.textViewCountdown);
 
         mButtonStartPause = findViewById(R.id.buttonStartPause);
@@ -75,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
         }
         updateCountDownText();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void startTimer() {
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
