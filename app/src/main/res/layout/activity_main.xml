@@ -37,9 +37,28 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu" />
 
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editTextInput"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textViewCountdown"
+            android:layout_centerHorizontal="true"
+            android:hint="@string/edit_hint"
+            android:inputType="number"
+            android:maxLength="4" />
+
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/editTextInput"
+            android:layout_toEndOf="@+id/editTextInput"
+            android:text="@string/edit_button" />
 
         <TextView
             android:id="@+id/textViewCountdown"
@@ -51,23 +70,38 @@
             android:textColor="@android:color/black"
             android:textSize="60sp" />
 
-        <Button
-            android:id="@+id/buttonStartPause"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewCountdown"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:indeterminate="false"
+            android:max="10"
+            android:minWidth="200dp"
+            android:minHeight="75dp"
+            android:progress="0" />
+
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressBar"
             android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@id/textViewCountdown"
             android:text="@string/start" />
 
         <Button
-            android:id="@+id/buttonRest"
+            android:id="@+id/buttonReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textViewCountdown"
+            android:layout_below="@id/progressBar"
             android:layout_marginStart="11dp"
-            android:layout_toEndOf="@id/buttonStartPause"
-            android:text="@string/reset"
-            android:visibility="invisible"
-            tools:visibility="visible" />
+            android:layout_toEndOf="@id/textViewCountdown"
+            android:text="@string/reset" />
     </RelativeLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>

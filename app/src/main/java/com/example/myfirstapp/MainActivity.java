@@ -1,5 +1,6 @@
 package com.example.myfirstapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,32 +9,37 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 
-import android.content.Intent;
-
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
 
-
-    private static final long START_TIME_IN_MILLIS = 600000;
-
+    private EditText mEditTimerInput;
     private TextView mTextViewCountDown;
-    private Button mButtonStartPause;
-    private Button mButtonRest;
+
+    private ProgressBar mProgressBar;
+
+    private Button mButtonEdit;
+    private Button mButtonStart;
+    private Button mButtonReset;
 
     private CountDownTimer mCountDownTimer;
 
     private boolean mTimerRunning;
 
-    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
-
+    private long mStartTimeInMillis;
+    private long mTimeLeftInMillis = mStartTimeInMillis;
+    private long mEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,46 +59,50 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         // Creation of Timer views
-        mTextViewCountDown = findViewById(R.id.textViewCountdown);
+        mTextViewCountDown = (TextView)findViewById(R.id.textViewCountdown);
+        mEditTimerInput = (EditText)findViewById(R.id.editTextInput);
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        mButtonStartPause = findViewById(R.id.buttonStartPause);
-        mButtonRest = findViewById(R.id.buttonRest);
+        mButtonEdit = (Button)(findViewById(R.id.buttonEdit));
+        mButtonStart = (Button)findViewById(R.id.buttonStart);
+        mButtonReset = (Button)findViewById(R.id.buttonReset);
 
-        mButtonStartPause.setOnClickListener(new View.OnClickListener() {
+        mButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTimerRunning) {
-                    pauseTimer();
-                } else {
+                String input = mEditTimerInput.getText().toString();
+                if (input.length() == 0) {
+                    Toast.makeText(MainActivity.this, "Input cannot be empty, please enter a number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int turnToMinutes = 60000;
+                long millisecondInput = Long.parseLong(input) * turnToMinutes;
+
+                if (millisecondInput == 0) {
+                    Toast.makeText(MainActivity.this, "Please enter a number higher than 0", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                setTimer(millisecondInput);
+                mEditTimerInput.setText("");
+            }
+        });
+
+        mButtonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!mTimerRunning) {
                     startTimer();
                 }
             }
         });
 
-        mButtonRest.setOnClickListener(new View.OnClickListener() {
+        mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 resetTimer();
             }
         });
-
-        if(savedInstanceState !=null){
-            //savedInstanceState.get("count_down");
-            Long savedOnRotation = savedInstanceState.getLong("count_down");
-            mTimeLeftInMillis = savedOnRotation;
-
-            Log.d("Is timer running?", "" + mTimerRunning);
-
-            startTimer();
-            /*
-            if (!mTimerRunning) {
-                updateCountDownText();
-            } else{
-                startTimer();
-            }
-
-             */
-        }
         updateCountDownText();
     }
 
@@ -105,54 +115,84 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setTimer(long milliseconds) {
+        mStartTimeInMillis = milliseconds;
+        resetTimer();
+        closeKeyboard();
+    }
     private void startTimer() {
+        mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
+
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
+
+                mProgressBar.setMax((int) mStartTimeInMillis / 1000);
+                int progress = (int)(millisUntilFinished / 1000);
+                mProgressBar.setProgress(mProgressBar.getMax() - progress);
                 updateCountDownText();
             }
 
             @Override
             public void onFinish() {
                 mTimerRunning = false;
-                mButtonStartPause.setText("Start");
-                mButtonStartPause.setVisibility(View.INVISIBLE);
-                mButtonRest.setVisibility(View.VISIBLE);
             }
         }.start();
 
         mTimerRunning = true;
-        mButtonStartPause.setText("Pause");
-        mButtonRest.setVisibility(View.INVISIBLE);
+    }
 
-    }
-    private void pauseTimer() {
-        mCountDownTimer.cancel();
-        mTimerRunning = false;
-        mButtonStartPause.setText("Start");
-        mButtonRest.setVisibility(View.VISIBLE);
-    }
     private void resetTimer() {
-        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+            mTimerRunning = false;
+        }
+        mTimeLeftInMillis = mStartTimeInMillis;
+        mProgressBar.setProgress(0);
         updateCountDownText();
-        mButtonRest.setVisibility(View.INVISIBLE);
-        mButtonStartPause.setVisibility(View.VISIBLE);
     }
     private void updateCountDownText() {
-        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds);
+        int hours = (int)(mTimeLeftInMillis / 1000) / 3600;
+        int minutes = (int)((mTimeLeftInMillis / 1000) % 3600) / 60;
+        int seconds = (int)(mTimeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d:%02d", hours, minutes, seconds);
 
         mTextViewCountDown.setText(timeLeftFormatted);
     }
 
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("count_down", mTimeLeftInMillis);
+        outState.putLong("countDown", mTimeLeftInMillis);
+        outState.putLong("startTimeInMillis", mStartTimeInMillis);
+        outState.putLong("endTimer", mEndTime);
+        outState.putBoolean("timerRunning", mTimerRunning);
     }
 
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mTimeLeftInMillis = savedInstanceState.getLong("countDown");
+        mTimerRunning = savedInstanceState.getBoolean("timerRunning");
+        mStartTimeInMillis = savedInstanceState.getLong("startTimeInMillis");
+        updateCountDownText();
+
+        if (mTimerRunning) {
+            mEndTime = savedInstanceState.getLong("endTimer");
+            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+            startTimer();
+        }
+    }
 }
 

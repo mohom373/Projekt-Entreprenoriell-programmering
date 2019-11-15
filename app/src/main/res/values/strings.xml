@@ -8,6 +8,8 @@
     <string name="activity_1_text_view">Activity 1</string>
 
     <string name="start">Start</string>
+    <string name="edit_hint">Minutes</string>
+    <string name="edit_button">Set</string>
     <string name="default_timer">00:00</string>
     <string name="reset">Reset</string>
 
