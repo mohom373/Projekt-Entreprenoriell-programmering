@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonEdit;
     private Button mButtonStart;
     private Button mButtonReset;
+
+    private Button mButtonChangeActivity;
 
     private CountDownTimer mCountDownTimer;
 
@@ -66,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
         mButtonEdit = (Button)(findViewById(R.id.buttonEdit));
         mButtonStart = (Button)findViewById(R.id.buttonStart);
         mButtonReset = (Button)findViewById(R.id.buttonReset);
+
+        mButtonChangeActivity = (Button)findViewById(R.id.buttonChangeActivity);
+        mButtonChangeActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity();
+            }
+        });
 
         mButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateCountDownText();
+    }
+
+    public void changeActivity(){
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        startActivity(intent);
     }
 
     @Override
