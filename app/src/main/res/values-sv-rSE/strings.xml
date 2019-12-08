@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Studify</string>
+    <string name="navigation_drawer_open">Öppna navigationsmenyn</string>
+    <string name="navigation_drawer_close">Stäng navigationsmenyn</string>
+
+    <string name="button_send">Tryck Här</string>
+    <string name="new_page_activity">You just clicked on my button and are now in Activity 2</string>
+    <string name="activity_1_text_view">Activity 1</string>
+
+    <string name="change_activity">Byt Activity</string>
+
+    <string name="start">Start</string>
+    <string name="edit_hint">Minuter</string>
+    <string name="edit_button">Set</string>
+    <string name="default_timer">00:00</string>
+    <string name="reset">Reset</string>
+
+    <string name="username">Användarnamn</string>
+    <string name="password">Lösenord</string>
+    <string name="add_user">Lägg till användare</string>
+</resources>
