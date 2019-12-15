@@ -15,8 +15,10 @@
     <string name="default_timer">00:00</string>
     <string name="reset">Reset</string>
 
+    <string name="email">Email</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="add_user">Add User</string>
+    <string name="sign_up">Sign Up</string>
 
 </resources>

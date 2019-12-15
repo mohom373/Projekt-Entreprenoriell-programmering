@@ -28,4 +28,25 @@
         android:text="@string/add_user"
         android:onClick="addUser"/>
 
+    <EditText
+        android:id="@+id/edit_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+        android:inputType="text"/>
+
+
+    <EditText
+        android:id="@+id/edit_text_user_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:onClick="signUp"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

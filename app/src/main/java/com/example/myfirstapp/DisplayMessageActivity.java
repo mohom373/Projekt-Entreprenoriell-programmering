@@ -61,4 +61,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void signUp(View view) {
+        /*TODO
+        Implement signUp method
+         */
+    }
 }
