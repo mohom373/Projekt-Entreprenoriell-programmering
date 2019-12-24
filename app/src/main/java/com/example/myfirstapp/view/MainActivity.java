@@ -1,4 +1,4 @@
-package com.example.myfirstapp;
+package com.example.myfirstapp.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,13 +12,14 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myfirstapp.R;
 
 import java.util.Locale;
 
@@ -83,14 +84,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String input = mEditTimerInput.getText().toString();
                 if (input.length() == 0) {
-                    Toast.makeText(MainActivity.this, "Input cannot be empty, please enter a number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            "Input cannot be empty, please enter a number",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int turnToMinutes = 60000;
                 long millisecondInput = Long.parseLong(input) * turnToMinutes;
 
                 if (millisecondInput == 0) {
-                    Toast.makeText(MainActivity.this, "Please enter a number higher than 0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            "Please enter a number higher than 0", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeActivity(){
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        Intent intent = new Intent(this, LoginPageActivity.class);
         startActivity(intent);
     }
 
@@ -174,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
         int minutes = (int)((mTimeLeftInMillis / 1000) % 3600) / 60;
         int seconds = (int)(mTimeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d:%02d", hours, minutes, seconds);
+        String timeLeftFormatted = String.format(Locale.getDefault(),
+                "%02d:%02d:%02d", hours, minutes, seconds);
 
         mTextViewCountDown.setText(timeLeftFormatted);
     }
