@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -20,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfirstapp.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
 
@@ -45,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private long mTimeLeftInMillis = mStartTimeInMillis;
     private long mEndTime;
 
+    private String mPersonName;
+    private String mPersonEmail;
+    private TextView mNameId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +68,29 @@ public class MainActivity extends AppCompatActivity {
 
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        //##########################################################################################
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            mPersonName = acct.getDisplayName();
+            mPersonEmail = acct.getEmail();
+            Uri personPhoto = acct.getPhotoUrl();
+        }
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View navHeaderView = navigationView.getHeaderView(0);
+
+        TextView userName = navHeaderView.findViewById(R.id.userId);
+        userName.setText(mPersonName);
+
+        TextView userEmail = navHeaderView.findViewById(R.id.userEmail);
+        userEmail.setText(mPersonEmail);
+
+        //##########################################################################################
+
+
+
 
         // Creation of Timer views
         mTextViewCountDown = (TextView)findViewById(R.id.textViewCountdown);
@@ -119,11 +149,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateCountDownText();
+
+
+
+
     }
 
     public void changeActivity(){
-        Intent intent = new Intent(this, LoginPageActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(this, LoginPageActivity.class);
+        startActivity(intent);*/
+
     }
 
     @Override

@@ -8,6 +8,8 @@ import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.myfirstapp.model.User;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginViewModel extends BaseObservable {
     private User mUser;
@@ -18,16 +20,11 @@ public class LoginViewModel extends BaseObservable {
     @Bindable
     private String toastMessage = null;
 
-
-    public String getToastMessage() {
-        return toastMessage;
-    }
-
     private void setToastMessage(String toastMessage) {
-
         this.toastMessage = toastMessage;
         notifyPropertyChanged(BR.toastMessage);
     }
+
     private boolean isInputDataValid() {
         return !TextUtils.isEmpty(getUserEmail()) &&
                 Patterns.EMAIL_ADDRESS.matcher(getUserEmail()).matches() &&
@@ -63,10 +60,15 @@ public class LoginViewModel extends BaseObservable {
 
     public void onLoginClicked(){
         if (isInputDataValid()) {
-            mUser.addUserToDB();
+            //mUser.addUserToDB();
             setToastMessage(successMessage);
         } else {
             setToastMessage(errorMessage);
         }
     }
+
+    public String getToastMessage() {
+        return toastMessage;
+    }
+
 }

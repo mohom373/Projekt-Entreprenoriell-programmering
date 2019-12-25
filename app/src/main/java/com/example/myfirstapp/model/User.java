@@ -16,6 +16,7 @@ public class User {
     private String mEmail;
     private String mUserName;
     private String mPassword;
+    private int mPoints;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
 
@@ -52,6 +53,14 @@ public class User {
 
     public void setmPassword(String mPassword) {
         this.mPassword = mPassword;
+    }
+
+    public int getmPoints() {
+        return mPoints;
+    }
+
+    public void setmPoints(int mPoints) {
+        this.mPoints = mPoints;
     }
 
     public void addUserToDB() {
