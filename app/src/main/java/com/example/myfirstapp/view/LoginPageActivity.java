@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.io.Serializable;
 
 public class LoginPageActivity extends AppCompatActivity
         implements View.OnClickListener {
@@ -39,7 +43,6 @@ public class LoginPageActivity extends AppCompatActivity
 
     private GoogleSignInClient mGoogleSignInClient;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +52,11 @@ public class LoginPageActivity extends AppCompatActivity
         activityMainBinding.setViewModel(new LoginViewModel());
         activityMainBinding.executePendingBindings();
 
-
         // Button Listeners
         findViewById(R.id.googleSignInBtn).setOnClickListener(this);
+
+        // Other Listeners
+        findViewById(R.id.textViewSignup).setOnClickListener(this);
 
         // Configure Google Sign in
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -70,20 +75,6 @@ public class LoginPageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-
-    private void updateUI(FirebaseUser currentUser) {
-        /*
-        TODO
-         */
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -93,7 +84,10 @@ public class LoginPageActivity extends AppCompatActivity
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                if (account != null) {
+                    firebaseAuthWithGoogle(account);
+                }
+                startActivity(new Intent(this, MainActivity.class));
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -104,10 +98,27 @@ public class LoginPageActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStart() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+        super.onStart();
+    }
+
+
     public void onClick(View view) {
-        signIn();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        switch (view.getId()) {
+            case R.id.googleSignInBtn:
+                signIn();
+                //Intent intent = new Intent(this, MainActivity.class);
+                //intent.putExtra("mGoogleAuth", (Serializable) mGoogleSignInClient);
+                //startActivity(intent);
+                break;
+            case R.id.textViewSignup:
+                startActivity(new Intent(this, SignUpPageActivity.class));
+                break;
+        }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {

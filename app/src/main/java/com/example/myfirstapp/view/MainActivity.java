@@ -21,10 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfirstapp.R;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private String mPersonName;
     private String mPersonEmail;
     private TextView mNameId;
+
+    private GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
         //##########################################################################################
 
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
             mPersonName = acct.getDisplayName();
             mPersonEmail = acct.getEmail();
-            Uri personPhoto = acct.getPhotoUrl();
         }
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -88,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
         userEmail.setText(mPersonEmail);
 
         //##########################################################################################
-
-
-
 
         // Creation of Timer views
         mTextViewCountDown = (TextView)findViewById(R.id.textViewCountdown);
@@ -150,15 +163,20 @@ public class MainActivity extends AppCompatActivity {
         });
         updateCountDownText();
 
-
-
-
     }
+    //############################## ON CREATE ENDS #########################################
 
     public void changeActivity(){
         /*Intent intent = new Intent(this, LoginPageActivity.class);
         startActivity(intent);*/
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, (task) -> {
+                    Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
 
+                    startActivity(new Intent(this, LoginPageActivity.class));
+
+                    finish();
+                });
     }
 
     @Override

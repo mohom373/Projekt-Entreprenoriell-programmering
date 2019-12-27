@@ -73,7 +73,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/inEmail"
+                android:id="@+id/loginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
@@ -83,7 +83,7 @@
 
 
             <EditText
-                android:id="@+id/inPassword"
+                android:id="@+id/loginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
@@ -99,6 +99,16 @@
                 android:onClick="@{()-> viewModel.onLoginClicked()}"
                 android:text="@string/login"
                 bind:toastMessage="@{viewModel.toastMessage}" />
+
+            <TextView
+                android:id="@+id/textViewSignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Don't have account? Sign Up"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorAccent" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/googleSignInBtn"
