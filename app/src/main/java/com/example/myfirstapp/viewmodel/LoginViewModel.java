@@ -1,18 +1,28 @@
 package com.example.myfirstapp.viewmodel;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.myfirstapp.model.User;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.example.myfirstapp.view.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginViewModel extends BaseObservable {
     private User mUser;
+    private Context mContext;
+
+    private FirebaseAuth mFirebaseAuth;
 
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Password not valid";
@@ -54,17 +64,37 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.userPassword);
     }
 
-    public LoginViewModel() {
+    public LoginViewModel(Context context) {
         mUser = new User("","");
+        mContext = context;
     }
 
     public void onLoginClicked(){
         if (isInputDataValid()) {
             //mUser.addUserToDB();
-            setToastMessage(successMessage);
+            this.userLogin();
+            //setToastMessage(successMessage);
+            //setToastMessage("This is the context: " + mContext);
         } else {
             setToastMessage(errorMessage);
         }
+    }
+
+    private void userLogin() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth.signInWithEmailAndPassword(getUserEmail(), getUserPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(mContext, "LOGIN SUCCESFULL", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    mContext.startActivity(intent);
+
+                } else {
+                    Toast.makeText(mContext, "LOGIN FAIleD", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public String getToastMessage() {

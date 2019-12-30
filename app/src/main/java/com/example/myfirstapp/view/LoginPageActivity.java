@@ -49,7 +49,7 @@ public class LoginPageActivity extends AppCompatActivity
         ActivityLoginPageBinding activityMainBinding = DataBindingUtil.setContentView(this,
                 R.layout.activity_login_page);
 
-        activityMainBinding.setViewModel(new LoginViewModel());
+        activityMainBinding.setViewModel(new LoginViewModel(this));
         activityMainBinding.executePendingBindings();
 
         // Button Listeners
@@ -69,7 +69,7 @@ public class LoginPageActivity extends AppCompatActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
-    private void signIn() {
+    private void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -110,10 +110,7 @@ public class LoginPageActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.googleSignInBtn:
-                signIn();
-                //Intent intent = new Intent(this, MainActivity.class);
-                //intent.putExtra("mGoogleAuth", (Serializable) mGoogleSignInClient);
-                //startActivity(intent);
+                googleSignIn();
                 break;
             case R.id.textViewSignup:
                 startActivity(new Intent(this, SignUpPageActivity.class));
@@ -132,8 +129,6 @@ public class LoginPageActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, (task) -> {
                     Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
 
-                    startActivity(new Intent(this, LoginPageActivity.class));
+                    startActivity(new Intent(this,
+                                LoginPageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
                     finish();
                 });
@@ -185,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 

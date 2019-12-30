@@ -1,12 +1,10 @@
 package com.example.myfirstapp.model;
 
-import android.view.View;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -19,6 +17,8 @@ public class User {
     private int mPoints;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+
+    private FirebaseAuth mFirebaseAuth;
 
     public User(String email, String username, String password) {
         mEmail = email;
@@ -86,4 +86,21 @@ public class User {
                     }
                 });
     }
+
+    /*public void userLogin() {
+        mFirebaseAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            Context context = ContextHelper.getContext();
+
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
+                    
+                } else {
+                    Toast.makeText(context, "LOGIN FAIleD", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }*/
 }
