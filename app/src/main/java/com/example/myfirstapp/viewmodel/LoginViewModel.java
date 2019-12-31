@@ -65,11 +65,11 @@ public class LoginViewModel extends BaseObservable {
     }
 
     public LoginViewModel(Context context) {
-        mUser = new User("","");
+        mUser = new User("", "");
         mContext = context;
     }
 
-    public void onLoginClicked(){
+    public void onLoginClicked() {
         if (isInputDataValid()) {
             //mUser.addUserToDB();
             this.userLogin();

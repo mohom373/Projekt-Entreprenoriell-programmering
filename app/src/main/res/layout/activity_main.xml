@@ -29,13 +29,6 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -51,13 +44,6 @@
             android:inputType="number"
             android:maxLength="4" />
 
-        <Button
-            android:id="@+id/buttonChangeActivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/editTextInput"
-            android:layout_alignTop="@+id/buttonEdit"
-            android:text="@string/change_activity"/>
         <Button
             android:id="@+id/buttonEdit"
             android:layout_width="wrap_content"
@@ -109,5 +95,14 @@
             android:layout_toEndOf="@id/textViewCountdown"
             android:text="@string/reset" />
     </RelativeLayout>
+
+    <!-- NAVIGATION MUST ALWAYS BE LAST IN THE DRAWER LAYOUT OR ELSE THE CLICK EVENT WON'T WORK-->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

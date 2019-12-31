@@ -100,9 +100,16 @@ public class LoginPageActivity extends AppCompatActivity
     @Override
     public void onStart() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
         if (account != null) {
             startActivity(new Intent(this, MainActivity.class));
         }
+
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
         super.onStart();
     }
 

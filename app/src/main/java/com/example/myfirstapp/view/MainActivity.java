@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.view.inputmethod.InputMethodManager;
@@ -33,11 +36,13 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
-    private DrawerLayout drawer;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout mDrawer;
 
     private EditText mEditTimerInput;
     private TextView mTextViewCountDown;
@@ -47,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonEdit;
     private Button mButtonStart;
     private Button mButtonReset;
-
-    private Button mButtonChangeActivity;
 
     private CountDownTimer mCountDownTimer;
 
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mNameId;
 
     private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mFirebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,15 +76,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawer.addDrawerListener(toggle);
+        mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
         //##########################################################################################
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -94,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             mPersonEmail = acct.getEmail();
         }
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
         View navHeaderView = navigationView.getHeaderView(0);
 
         TextView userName = navHeaderView.findViewById(R.id.userId);
@@ -113,14 +119,6 @@ public class MainActivity extends AppCompatActivity {
         mButtonEdit = (Button)(findViewById(R.id.buttonEdit));
         mButtonStart = (Button)findViewById(R.id.buttonStart);
         mButtonReset = (Button)findViewById(R.id.buttonReset);
-
-        mButtonChangeActivity = (Button)findViewById(R.id.buttonChangeActivity);
-        mButtonChangeActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeActivity();
-            }
-        });
 
         mButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,11 +165,12 @@ public class MainActivity extends AppCompatActivity {
     //############################## ON CREATE ENDS #########################################
 
     public void changeActivity(){
-        /*Intent intent = new Intent(this, LoginPageActivity.class);
-        startActivity(intent);*/
+
+        mFirebaseAuth.signOut();
+
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, (task) -> {
-                    Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
 
                     startActivity(new Intent(this,
                                 LoginPageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -182,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -272,6 +271,20 @@ public class MainActivity extends AppCompatActivity {
             mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
             startTimer();
         }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_sign_out:
+                changeActivity();
+                Toast.makeText(this, "I just got touched too im the message box!!!", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        mDrawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
 
