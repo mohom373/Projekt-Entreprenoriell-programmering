@@ -13,6 +13,7 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.myfirstapp.model.User;
 import com.example.myfirstapp.view.MainActivity;
+import com.example.myfirstapp.view.SignUpPageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -73,8 +74,6 @@ public class LoginViewModel extends BaseObservable {
         if (isInputDataValid()) {
             //mUser.addUserToDB();
             this.userLogin();
-            //setToastMessage(successMessage);
-            //setToastMessage("This is the context: " + mContext);
         } else {
             setToastMessage(errorMessage);
         }
@@ -82,11 +81,12 @@ public class LoginViewModel extends BaseObservable {
 
     private void userLogin() {
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseAuth.signInWithEmailAndPassword(getUserEmail(), getUserPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mFirebaseAuth.signInWithEmailAndPassword(getUserEmail(),
+                getUserPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(mContext, "LOGIN SUCCESFULL", Toast.LENGTH_SHORT).show();
+                    setToastMessage(successMessage);
                     Intent intent = new Intent(mContext, MainActivity.class);
                     mContext.startActivity(intent);
 
@@ -97,8 +97,14 @@ public class LoginViewModel extends BaseObservable {
         });
     }
 
+    public void onTextViewSignUpClicked () {
+        setToastMessage("TRYING TO CLICK THIS DAMN TING");
+        Intent intent = new Intent(mContext, SignUpPageActivity.class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
+
     public String getToastMessage() {
         return toastMessage;
     }
-
 }

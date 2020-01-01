@@ -22,4 +22,10 @@
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
 
+
+    <!-- Facbeook stuff -->
+    <string name="facebook_app_id">1088045508193748</string>
+    <string name="fb_login_protocol_scheme">fb1088045508193748</string>
+
+
 </resources>

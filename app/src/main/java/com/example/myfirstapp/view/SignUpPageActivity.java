@@ -50,7 +50,10 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
                 signUpUser();
                 break;
             case R.id.signUpTextViewLogin:
-                startActivity(new Intent(SignUpPageActivity.this, LoginPageActivity.class));
+                Intent intent = new Intent(this, LoginPageActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                startActivity(intent);
                 break;
         }
     }
@@ -66,6 +69,9 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
                                 Toast.makeText(SignUpPageActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignUpPageActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                     Toast.makeText(SignUpPageActivity.this, "Email already used for registration", Toast.LENGTH_SHORT).show();
