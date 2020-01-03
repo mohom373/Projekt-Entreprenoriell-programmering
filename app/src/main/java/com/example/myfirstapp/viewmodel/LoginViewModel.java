@@ -1,3 +1,4 @@
+/*
 package com.example.myfirstapp.viewmodel;
 
 import android.content.Context;
@@ -42,9 +43,11 @@ public class LoginViewModel extends BaseObservable {
                 getUserPassword().length() > 5;
     }
 
-    /*
+    */
+/*
     PUBLIC METHODS START HERE
-     */
+     *//*
+
     public void setUserEmail(String email) {
         mUser.setmEmail(email);
         notifyPropertyChanged(BR.userEmail);
@@ -108,3 +111,4 @@ public class LoginViewModel extends BaseObservable {
         return toastMessage;
     }
 }
+*/

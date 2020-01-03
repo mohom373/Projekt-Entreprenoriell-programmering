@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfirstapp.R;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -41,7 +42,9 @@ import org.w3c.dom.Text;
 import java.io.Serializable;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener {
+
     private DrawerLayout mDrawer;
 
     private EditText mEditTimerInput;
@@ -63,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private String mPersonName;
     private String mPersonEmail;
-    private TextView mNameId;
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
@@ -167,14 +169,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void changeActivity(){
 
         mFirebaseAuth.signOut();
+        LoginManager.getInstance().logOut();
 
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, (task) -> {
-                    //Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
-
-                    startActivity(new Intent(this,
-                                LoginPageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
+                    Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, LoginPageActivity.class);
+                    startActivity(intent);
                     finish();
                 });
     }
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         resetTimer();
         closeKeyboard();
     }
+
     private void startTimer() {
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
@@ -210,13 +212,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mProgressBar.setProgress(mProgressBar.getMax() - progress);
                 updateCountDownText();
             }
-
             @Override
             public void onFinish() {
                 mTimerRunning = false;
             }
         }.start();
-
         mTimerRunning = true;
     }
 
@@ -282,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "I just got touched too im the message box!!!", Toast.LENGTH_SHORT).show();
                 break;
         }
-
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
