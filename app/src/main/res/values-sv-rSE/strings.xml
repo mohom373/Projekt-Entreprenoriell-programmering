@@ -16,7 +16,18 @@
     <string name="default_timer">00:00</string>
     <string name="reset">Reset</string>
 
+    <string name="email">E-post</string>
     <string name="username">Användarnamn</string>
     <string name="password">Lösenord</string>
     <string name="add_user">Lägg till användare</string>
+    <string name="sign_up">Registrera dig</string>
+    <string name="login">Logga in</string>
+    <string name="already_user">Har ett konto redan? Logga in här!</string>
+    <string name="no_account">Har inget konto? Registrera dig här!</string>
+
+
+    <!-- Facbeook stuff -->
+    <string name="facebook_app_id">1088045508193748</string>
+    <string name="fb_login_protocol_scheme">fb1088045508193748</string>
+
 </resources>

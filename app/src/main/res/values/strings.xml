@@ -21,6 +21,8 @@
     <string name="add_user">Add User</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
+    <string name="already_user">Already have account? Login here!</string>
+    <string name="no_account">Don\'t have an account? Sign Up here!</string>
 
 
     <!-- Facbeook stuff -->

@@ -45,7 +45,7 @@
             android:maxLength="4" />
 
         <Button
-            android:id="@+id/buttonEdit"
+            android:id="@+id/mainEditBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/editTextInput"
@@ -78,7 +78,7 @@
 
 
         <Button
-            android:id="@+id/buttonStart"
+            android:id="@+id/mainStartBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/progressBar"
@@ -87,7 +87,7 @@
             android:text="@string/start" />
 
         <Button
-            android:id="@+id/buttonReset"
+            android:id="@+id/mainResetBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/progressBar"

@@ -26,21 +26,18 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
     EditText mPassword;
 
     FirebaseAuth mFirebaseAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_page);
 
         findViewById(R.id.signUpBtn).setOnClickListener(this);
-
         findViewById(R.id.signUpTextViewLogin).setOnClickListener(this);
 
         mEmail = findViewById(R.id.signUpEmail);
         mPassword = findViewById(R.id.signUpPassword);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-
     }
 
     @Override
@@ -50,8 +47,8 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
                 signUpUser();
                 break;
             case R.id.signUpTextViewLogin:
+                setToastMessage("Going back to login screen");
                 Intent intent = new Intent(this, LoginPageActivity.class);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                 startActivity(intent);
                 break;
@@ -68,26 +65,32 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                Toast.makeText(SignUpPageActivity.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(SignUpPageActivity.this, MainActivity.class);
+                                setToastMessage("User registered successfully");
+                                Intent intent = new Intent(SignUpPageActivity.this,
+                                        MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {
-                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                    Toast.makeText(SignUpPageActivity.this, "Email already used for registration", Toast.LENGTH_SHORT).show();
+                                if (task.getException()
+                                        instanceof FirebaseAuthUserCollisionException) {
+                                    setToastMessage("Email already used for registration");
                                 }
                             }
                         }
                     });
         } else {
-            Toast.makeText(SignUpPageActivity.this, "Sign Up failed", Toast.LENGTH_SHORT).show();
+            setToastMessage("Sign up failed");
         }
     }
-
 
     private boolean isInputDataValid(String email, String password) {
         return !TextUtils.isEmpty(email) &&
                 Patterns.EMAIL_ADDRESS.matcher(email).matches() &&
                 password.length() > 5;
+    }
+
+
+    private void setToastMessage(String toastMessage) {
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 }

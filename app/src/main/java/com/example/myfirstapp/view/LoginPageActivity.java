@@ -70,7 +70,6 @@ public class LoginPageActivity extends AppCompatActivity
         mLoginBtn = (Button)findViewById(R.id.loginBtn);
         mSignUpTextView = (TextView)findViewById(R.id.loginTextViewSignUp);
 
-
         // Set listener for button
         mLoginBtn.setOnClickListener(this);
 
@@ -91,14 +90,13 @@ public class LoginPageActivity extends AppCompatActivity
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "facebook:onCANCEL: BLAAAH" );
-                Toast.makeText(LoginPageActivity.this, "FAILURE", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "facebook:onCANCEL: Canceling request" );
+
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onERROR:" + error);
-                Toast.makeText(LoginPageActivity.this, "ERROR error eroor", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "facebook:onERROR: " + error);
             }
         });
 
@@ -131,16 +129,12 @@ public class LoginPageActivity extends AppCompatActivity
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) {
                     firebaseAuthWithGoogle(account);
                 }
-                //startActivity(new Intent(this, MainActivity.class));
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // ...
             }
         }
     }
@@ -173,6 +167,7 @@ public class LoginPageActivity extends AppCompatActivity
                 break;
         }
     }
+
     private void userLogin() {
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -184,19 +179,25 @@ public class LoginPageActivity extends AppCompatActivity
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        setToastMessage("LOGIN SUCCESSFULLED");
+                        setToastMessage("User login successful");
                         Intent intent = new Intent(LoginPageActivity.this, MainActivity.class);
-                        //mContext.startActivity(intent);
                         startActivity(intent);
                     } else {
-                        //Toast.makeText(LoginPageActivity.this, "LOGIN FAIleD", Toast.LENGTH_SHORT).show();
-                        setToastMessage("LOGIN FAILED");
+                        setToastMessage("User login failed");
                     }
                 }
             });
+        } else {
+            if (TextUtils.isEmpty(email)) {
+                setToastMessage("Please fill in your email");
+            } else if (TextUtils.isEmpty(password))
+            {
+                setToastMessage("Please fill in you password");
+            } else {
+                setToastMessage("User email or password incorrect");
+            }
         }
     }
-
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
@@ -207,21 +208,19 @@ public class LoginPageActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            setToastMessage("User login successful");
                             Log.d(TAG, "signInWithCredential:success");
                             startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginPageActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
+                            setToastMessage("User login failed");
                         }
                     }
                 });
     }
 
     private void firebaseAuthWithFacebook(AccessToken accessToken) {
-        Toast.makeText(this, "I JUST GOT PRESSED BABYYY", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
         final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
 
@@ -231,26 +230,24 @@ public class LoginPageActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginPageActivity.this, "EYYYY THIS WORKED YO", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
+                            setToastMessage("User login Successful");
+                            Intent intent = new Intent(LoginPageActivity.this,
+                                    MainActivity.class);
+                            startActivity(intent);
                             finish();
                         } else {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginPageActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            setToastMessage("Authentication failed");
                         }
                     }
                 });
     }
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_HOME);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |  Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
@@ -261,11 +258,11 @@ public class LoginPageActivity extends AppCompatActivity
     }
 
     public void onTextViewSignUpClicked () {
-        setToastMessage("TRYING TO CLICK THIS DAMN TING");
+        setToastMessage("Going to sign up page");
         Intent intent = new Intent(LoginPageActivity.this, SignUpPageActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
     private void setToastMessage(String toastMessage) {
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }

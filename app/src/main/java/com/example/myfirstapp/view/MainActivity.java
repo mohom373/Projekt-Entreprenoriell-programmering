@@ -24,6 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfirstapp.R;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,20 +39,21 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private DrawerLayout mDrawer;
-
     private EditText mEditTimerInput;
     private TextView mTextViewCountDown;
-
     private ProgressBar mProgressBar;
 
     private Button mButtonEdit;
@@ -59,13 +63,9 @@ public class MainActivity extends AppCompatActivity implements
     private CountDownTimer mCountDownTimer;
 
     private boolean mTimerRunning;
-
     private long mStartTimeInMillis;
     private long mTimeLeftInMillis = mStartTimeInMillis;
     private long mEndTime;
-
-    private String mPersonName;
-    private String mPersonEmail;
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
@@ -88,110 +88,136 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //##########################################################################################
+        View navHeaderView = navigationView.getHeaderView(0);
+        TextView userEmail = navHeaderView.findViewById(R.id.userEmail);
+
+        //###################################################################################//
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN )
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
+        //#########################Get User info begin ######################################//
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
         if (acct != null) {
-            mPersonName = acct.getDisplayName();
-            mPersonEmail = acct.getEmail();
+            userEmail.setText(acct.getEmail());
+        } else if (user != null) {
+            userEmail.setText(user.getEmail());
+        } else if (accessToken != null) {
+            GraphRequest request = GraphRequest.newMeRequest(accessToken,
+                    new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+                    try {
+                        userEmail.setText(object.getString("email"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-
-        View navHeaderView = navigationView.getHeaderView(0);
-
-        TextView userName = navHeaderView.findViewById(R.id.userId);
-        userName.setText(mPersonName);
-
-        TextView userEmail = navHeaderView.findViewById(R.id.userEmail);
-        userEmail.setText(mPersonEmail);
-
-        //##########################################################################################
+        //################################Get User info end ##################################//
 
         // Creation of Timer views
         mTextViewCountDown = (TextView)findViewById(R.id.textViewCountdown);
         mEditTimerInput = (EditText)findViewById(R.id.editTextInput);
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        mButtonEdit = (Button)(findViewById(R.id.buttonEdit));
-        mButtonStart = (Button)findViewById(R.id.buttonStart);
-        mButtonReset = (Button)findViewById(R.id.buttonReset);
+        // Find all buttons from layout
+        mButtonEdit = (Button)findViewById(R.id.mainEditBtn);
+        mButtonStart = (Button)findViewById(R.id.mainStartBtn);
+        mButtonReset = (Button)findViewById(R.id.mainResetBtn);
 
-        mButtonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String input = mEditTimerInput.getText().toString();
-                if (input.length() == 0) {
-                    Toast.makeText(MainActivity.this,
-                            "Input cannot be empty, please enter a number",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                int turnToMinutes = 60000;
-                long millisecondInput = Long.parseLong(input) * turnToMinutes;
+        // Setup Button listeners
+        mButtonEdit.setOnClickListener(this);
+        mButtonStart.setOnClickListener(this);
+        mButtonReset.setOnClickListener(this);
 
-                if (millisecondInput == 0) {
-                    Toast.makeText(MainActivity.this,
-                            "Please enter a number higher than 0", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                setTimer(millisecondInput);
-                mEditTimerInput.setText("");
-            }
-        });
-
-        mButtonStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!mTimerRunning) {
-                    startTimer();
-                }
-            }
-        });
-
-        mButtonReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetTimer();
-            }
-        });
+        // Update
         updateCountDownText();
-
     }
     //############################## ON CREATE ENDS #########################################
 
-    public void changeActivity(){
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_sign_out:
+                onMainSignOutNavViewClicked();
+                break;
+        }
+        mDrawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.mainEditBtn:
+                onMainEditBtnClicked();
+                break;
+            case R.id.mainStartBtn:
+                onMainStartBtnClicked();
+                break;
+            case R.id.mainResetBtn:
+                onMainResetBtnClicked();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //************************** Clickable functions start *********************************//
+    private void onMainResetBtnClicked() {
+        resetTimer();
+    }
+
+    private void onMainStartBtnClicked() {
+        if(!mTimerRunning) {
+            startTimer();
+        }
+    }
+
+    public void onMainEditBtnClicked() {
+        String input = mEditTimerInput.getText().toString();
+        if (input.length() == 0) {
+            Toast.makeText(MainActivity.this,
+                    "Input cannot be empty, please enter a number",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int turnToMinutes = 60000;
+        long millisecondInput = Long.parseLong(input) * turnToMinutes;
+
+        if (millisecondInput == 0) {
+            Toast.makeText(MainActivity.this,
+                    "Please enter a number higher than 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        setTimer(millisecondInput);
+        mEditTimerInput.setText("");
+    }
+
+    public void onMainSignOutNavViewClicked(){
         mFirebaseAuth.signOut();
         LoginManager.getInstance().logOut();
-
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, (task) -> {
-                    Toast.makeText(this, "SignOut Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Sign Out Successful",
+                            Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, LoginPageActivity.class);
                     startActivity(intent);
                     finish();
                 });
     }
-
-    @Override
-    public void onBackPressed() {
-        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
-            mDrawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
+    //************************** Clickable item functions end *********************************//
 
     private void setTimer(long milliseconds) {
         mStartTimeInMillis = milliseconds;
@@ -229,8 +255,8 @@ public class MainActivity extends AppCompatActivity implements
         mProgressBar.setProgress(0);
         updateCountDownText();
     }
-    private void updateCountDownText() {
 
+    private void updateCountDownText() {
         int hours = (int)(mTimeLeftInMillis / 1000) / 3600;
         int minutes = (int)((mTimeLeftInMillis / 1000) % 3600) / 60;
         int seconds = (int)(mTimeLeftInMillis / 1000) % 60;
@@ -248,6 +274,21 @@ public class MainActivity extends AppCompatActivity implements
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    //********************************** Overrides of state **********************************//
+    @Override
+    public void onBackPressed() {
+        if(mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -273,17 +314,5 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_sign_out:
-                changeActivity();
-                Toast.makeText(this, "I just got touched too im the message box!!!", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        mDrawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }
 
