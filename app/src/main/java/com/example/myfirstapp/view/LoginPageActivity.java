@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -53,12 +54,15 @@ public class LoginPageActivity extends AppCompatActivity
     private EditText mLoginEmail;
     private EditText mLoginPassword;
 
+    private Button  mGoToMainPageBtn;
     private Button  mLoginBtn;
     private LoginButton mFacebookSignInBtn;
 
     private FirebaseAuth mFirebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +72,12 @@ public class LoginPageActivity extends AppCompatActivity
         mLoginEmail = (EditText)findViewById(R.id.loginEmail);
         mLoginPassword = (EditText)findViewById(R.id.loginPassword);
         mLoginBtn = (Button)findViewById(R.id.loginBtn);
+        mGoToMainPageBtn = (Button)findViewById(R.id.loginGoToMainPageBtn);
         mSignUpTextView = (TextView)findViewById(R.id.loginTextViewSignUp);
 
         // Set listener for button
         mLoginBtn.setOnClickListener(this);
+        mGoToMainPageBtn.setOnClickListener(this);
 
         // Set listener for textview
         mSignUpTextView.setOnClickListener(this);
@@ -112,6 +118,9 @@ public class LoginPageActivity extends AppCompatActivity
 
         // Initialize Firebase
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        // Initialize Firebase Analytics
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void googleSignIn() {
@@ -163,12 +172,25 @@ public class LoginPageActivity extends AppCompatActivity
             case R.id.loginTextViewSignUp:
                 onTextViewSignUpClicked();
                 break;
+            case R.id.loginGoToMainPageBtn:
+                onGoToMainPageBtnClicked();
             default:
                 break;
         }
     }
 
+    private void onGoToMainPageBtnClicked() {
+        setToastMessage("Going to main page without login");
+        Intent intent = new Intent(LoginPageActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void userLogin() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "User_Login");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Login_Button");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         String email = mLoginEmail.getText().toString().trim();
@@ -202,6 +224,12 @@ public class LoginPageActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Google_Login");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Login_Button");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -222,8 +250,14 @@ public class LoginPageActivity extends AppCompatActivity
 
     private void firebaseAuthWithFacebook(AccessToken accessToken) {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
-        final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Facebook_Login");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Login_Button");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
+        final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -258,6 +292,11 @@ public class LoginPageActivity extends AppCompatActivity
     }
 
     public void onTextViewSignUpClicked () {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Go_To_SignUp");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Textview");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         setToastMessage("Going to sign up page");
         Intent intent = new Intent(LoginPageActivity.this, SignUpPageActivity.class);
         startActivity(intent);

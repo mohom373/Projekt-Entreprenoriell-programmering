@@ -19,11 +19,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfirstapp.R;
+import com.example.myfirstapp.UserScoreAdapter;
+import com.example.myfirstapp.model.User;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -46,10 +49,11 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, Serializable {
 
     private DrawerLayout mDrawer;
     private EditText mEditTimerInput;
@@ -69,10 +73,26 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
+
+    private ListView mListView;
+    private UserScoreAdapter mUserScoreAdapter;
+    private ArrayList<User> mUsersList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //*****************************************************************************************************//
+        mListView = (ListView)findViewById(R.id.mainUserList);
+        mUsersList = new ArrayList<>();
+        mUsersList.add(new User("PlaceHolder@gmail.com", 3200));
+        mUsersList.add(new User("PlaceHolder2@gmail.com", 2300));
+        mUsersList.add(new User("PlaceHolder3@gmail.com", 1500));
+        mUserScoreAdapter = new UserScoreAdapter(this, mUsersList);
+        mListView.setAdapter(mUserScoreAdapter);
+
+        //*****************************************************************************************************//
 
         // Creation of navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -139,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements
         mButtonEdit.setOnClickListener(this);
         mButtonStart.setOnClickListener(this);
         mButtonReset.setOnClickListener(this);
+
+        // Check if user logged in
+        if (acct == null && accessToken == null && user == null) {
+            mButtonStart.setEnabled(false);
+            mButtonReset.setEnabled(false);
+        }
 
         // Update
         updateCountDownText();

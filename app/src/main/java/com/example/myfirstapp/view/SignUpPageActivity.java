@@ -16,16 +16,19 @@ import android.widget.Toast;
 import com.example.myfirstapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class SignUpPageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText mEmail;
-    EditText mPassword;
+    private EditText mEmail;
+    private EditText mPassword;
 
-    FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,9 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
         mPassword = findViewById(R.id.signUpPassword);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        // Initialize Firebase Analytics
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -56,6 +62,12 @@ public class SignUpPageActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void signUpUser() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "User_SignUp");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SignUp_Button");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
         String email = mEmail.getText().toString().trim();
         String password = mPassword.getText().toString().trim();
 

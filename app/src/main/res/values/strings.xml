@@ -23,6 +23,7 @@
     <string name="login">Login</string>
     <string name="already_user">Already have account? Login here!</string>
     <string name="no_account">Don\'t have an account? Sign Up here!</string>
+    <string name="go_to_main_page">Continue without account</string>
 
 
     <!-- Facbeook stuff -->

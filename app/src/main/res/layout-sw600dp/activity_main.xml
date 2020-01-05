@@ -40,6 +40,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ListView
+                android:id="@+id/mainUserList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/editTextInput"/>
+
+
             <EditText
                 android:id="@+id/editTextInput"
                 android:layout_width="120dp"

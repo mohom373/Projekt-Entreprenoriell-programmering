@@ -24,6 +24,8 @@
     <string name="login">Logga in</string>
     <string name="already_user">Har ett konto redan? Logga in här!</string>
     <string name="no_account">Har inget konto? Registrera dig här!</string>
+    <string name="go_to_main_page">Fortsätt utan inloggning</string>
+
 
 
     <!-- Facbeook stuff -->
