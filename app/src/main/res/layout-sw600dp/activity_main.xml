@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".view.MainActivity"
+        tools:openDrawer="start">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTextInput"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textViewCountdown"
+                android:layout_centerHorizontal="true"
+                android:hint="@string/edit_hint"
+                android:inputType="number"
+                android:maxLength="4" />
+
+            <Button
+                android:id="@+id/mainEditBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/editTextInput"
+                android:layout_toEndOf="@+id/editTextInput"
+                android:text="@string/edit_button" />
+
+            <TextView
+                android:id="@+id/textViewCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/default_timer"
+                android:textColor="@android:color/black"
+                android:textSize="60sp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewCountdown"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:indeterminate="false"
+                android:max="10"
+                android:minWidth="200dp"
+                android:minHeight="75dp"
+                android:progress="0" />
+
+
+            <Button
+                android:id="@+id/mainStartBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progressBar"
+                android:layout_centerHorizontal="true"
+                android:layout_toStartOf="@id/textViewCountdown"
+                android:text="@string/start" />
+
+            <Button
+                android:id="@+id/mainResetBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progressBar"
+                android:layout_marginStart="11dp"
+                android:layout_toEndOf="@id/textViewCountdown"
+                android:text="@string/reset" />
+        </RelativeLayout>
+
+        <!-- NAVIGATION MUST ALWAYS BE LAST IN THE DRAWER LAYOUT OR ELSE THE CLICK EVENT WON'T WORK-->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/drawer_menu" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
