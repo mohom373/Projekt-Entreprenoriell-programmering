@@ -202,7 +202,8 @@ public class LoginPageActivity extends AppCompatActivity
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         setToastMessage("User login successful");
-                        Intent intent = new Intent(LoginPageActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginPageActivity.this,
+                                MainActivity.class);
                         startActivity(intent);
                     } else {
                         setToastMessage("User login failed");
@@ -238,7 +239,8 @@ public class LoginPageActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             setToastMessage("User login successful");
                             Log.d(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(LoginPageActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginPageActivity.this,
+                                    MainActivity.class));
                             finish();
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -255,7 +257,6 @@ public class LoginPageActivity extends AppCompatActivity
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Facebook_Login");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Login_Button");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
 
         final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mFirebaseAuth.signInWithCredential(credential)

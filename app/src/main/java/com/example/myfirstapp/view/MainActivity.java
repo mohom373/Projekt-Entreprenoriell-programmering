@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //*****************************************************************************************************//
+        //**************************Creation of USERLISTVIEW***********************************//
         mListView = (ListView)findViewById(R.id.mainUserList);
         mUsersList = new ArrayList<>();
         mUsersList.add(new User("PlaceHolder@gmail.com", 3200));
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements
         mUserScoreAdapter = new UserScoreAdapter(this, mUsersList);
         mListView.setAdapter(mUserScoreAdapter);
 
-        //*****************************************************************************************************//
+        //**************************************************************************************//
 
         // Creation of navigation Drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
         View navHeaderView = navigationView.getHeaderView(0);
         TextView userEmail = navHeaderView.findViewById(R.id.userEmail);
 
-        //###################################################################################//
+        // Get FirebaseAuth instance
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        //#########################Get User info begin ######################################//
+        //************************ Get User info begin ************************************//
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             });
         }
-        //################################Get User info end ##################################//
+        //******************************* Get User info end ********************************//
 
         // Creation of Timer views
         mTextViewCountDown = (TextView)findViewById(R.id.textViewCountdown);
@@ -160,17 +160,15 @@ public class MainActivity extends AppCompatActivity implements
         mButtonStart.setOnClickListener(this);
         mButtonReset.setOnClickListener(this);
 
-        // Check if user logged in
+        // Check if user not logged in and hide elements
         if (acct == null && accessToken == null && user == null) {
-            mButtonStart.setEnabled(false);
-            mButtonReset.setEnabled(false);
+            mListView.setVisibility(View.GONE);
         }
 
         // Update
         updateCountDownText();
     }
-    //############################## ON CREATE ENDS #########################################
-
+    //**************************** ON CREATE ENDS *************************************//
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -243,8 +241,8 @@ public class MainActivity extends AppCompatActivity implements
                     finish();
                 });
     }
-    //************************** Clickable item functions end *********************************//
 
+    //************************** Clickable item functions end *********************************//
     private void setTimer(long milliseconds) {
         mStartTimeInMillis = milliseconds;
         resetTimer();
@@ -339,6 +337,5 @@ public class MainActivity extends AppCompatActivity implements
             startTimer();
         }
     }
-
 }
 

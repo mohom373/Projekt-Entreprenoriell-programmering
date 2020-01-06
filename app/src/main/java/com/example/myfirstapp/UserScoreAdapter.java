@@ -32,7 +32,8 @@ public class UserScoreAdapter extends ArrayAdapter<User> {
     public View getView(int pos, @Nullable View convertView, @NonNull ViewGroup parent) {
         View item = convertView;
         if (item == null) {
-            item = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent, false);
+            item = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent,
+                    false);
         }
 
         User currentUser = userList.get(pos);
