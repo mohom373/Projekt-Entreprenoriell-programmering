@@ -8,6 +8,11 @@ you have chosen, to let them know that you've started a studying session. The fr
 or the notification can function as a way to tell the friend that you don't wish to be disturbed right now. 
 
 ___
+# Screencast länkar:
+__Kodgenomgång__: https://www.youtube.com/watch?v=dIfVSwWYFPQ
+__App-DEMO__: https://youtu.be/6IslHMYVlVY
+
+___
 
 # Lista med uppfyllda krav för betyg 4:
 ## 1. Tekniska krav (5 uppfyllda):
